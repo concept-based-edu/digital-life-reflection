@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>우리 반 디지털 탐험일기</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f5f7ff 0%, #e8ecff 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6B73FF, #5D5FEF);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            background: white;
+            color: #5D5FEF;
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        /* 섹션 카드 개선 */
+        .section-card {
+            background: white;
+            border: 2px solid #e8ecff;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            color: #5D5FEF;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        /* 이름 입력 */
+        .name-section {
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9ff, #fff);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .name-input {
+            padding: 10px 20px;
+            border: 2px solid #6B73FF;
+            border-radius: 25px;
+            font-size: 1.1em;
+            width: 200px;
+            margin: 10px;
+        }
+        
+        /* 다중선택 가능한 활동 체크 */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .activity-item {
+            background: #f8f9ff;
+            border: 2px solid #e8ecff;
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .activity-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .activity-item.checked {
+            background: linear-gradient(135deg, #6B73FF, #5D5FEF);
+            color: white;
+            transform: scale(0.95);
+        }
+        
+        .activity-item label {
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* 시간 기록 슬라이더 */
+        .time-tracker {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .time-input {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .time-display {
+            text-align: center;
+            font-size: 1.5em;
+            color: #5D5FEF;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        /* 개방형 질문 텍스트 영역 */
+        .text-area-wrapper {
+            margin: 20px 0;
+        }
+        
+        .text-area-label {
+            display: block;
+            color: #5D5FEF;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .text-area {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px;
+            border: 2px solid #e8ecff;
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        .text-area:focus {
+            outline: none;
+            border-color: #6B73FF;
+            background: #f8f9ff;
+        }
+        
+        .writing-helper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .helper-btn {
+            background: white;
+            border: 1px solid #e8ecff;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .helper-btn:hover {
+            background: #6B73FF;
+            color: white;
+        }
+        
+        /* 감정 이모지 선택 */
+        .emotion-selector {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+        
+        .emotion-btn {
+            font-size: 2em;
+            background: white;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .emotion-btn:hover {
+            transform: scale(1.2);
+        }
+        
+        .emotion-btn.selected {
+            border-color: #6B73FF;
+            background: linear-gradient(135deg, #f8f9ff, #fff);
+        }
+        
+        /* 친구와 공유 섹션 */
+        .share-section {
+            background: linear-gradient(135deg, #fff8f0, #fff);
+            border: 2px solid #ffe8d0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .friend-share {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .friend-share input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ffe8d0;
+            border-radius: 10px;
+            font-size: 1em;
+        }
+        
+        .share-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        /* 성찰 카드 */
+        .reflection-card {
+            background: linear-gradient(135deg, #f0fffe, #fff);
+            border: 2px solid #4ECDC4;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .reflection-title {
+            color: #4ECDC4;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .reflection-content {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .reflection-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9ff;
+            border-left: 4px solid #4ECDC4;
+            border-radius: 8px;
+        }
+        
+        .reflection-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+        
+        .reflection-text {
+            color: #333;
+            font-size: 1.05em;
+            line-height: 1.5;
+        }
+        
+        /* 진행도 표시 */
+        .progress-bar {
+            background: #e8ecff;
+            border-radius: 50px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #6B73FF, #4ECDC4);
+            height: 100%;
+            border-radius: 50px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        /* 액션 버튼 */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .primary-btn {
+            background: linear-gradient(135deg, #6B73FF, #5D5FEF);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.05em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(107,115,255,0.3);
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .secondary-btn {
+            background: white;
+            color: #6B73FF;
+            border: 2px solid #6B73FF;
+            padding: 12px 30px;
+            font-size: 1.05em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        /* 말풍선 힌트 */
+        .hint-bubble {
+            background: #fffbf0;
+            border: 2px solid #ffd93d;
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            position: relative;
+            font-size: 0.95em;
+            color: #666;
+        }
+        
+        .hint-bubble::before {
+            content: '💡';
+            position: absolute;
+            left: -5px;
+            top: -5px;
+            font-size: 1.2em;
+        }
+        
+        /* 친구 코멘트 */
+        .friend-comments {
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .comment {
+            background: white;
+            border: 1px solid #e8ecff;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        
+        .comment-author {
+            color: #6B73FF;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .comment-text {
+            color: #333;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .activity-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .emotion-selector {
+                flex-wrap: wrap;
+            }
+        }
+        
+        /* 인쇄 스타일 */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .header {
+                background: none;
+                color: #333;
+                border-bottom: 2px solid #333;
+            }
+            
+            .header h1, .subtitle {
+                color: #333;
+            }
+            
+            .progress-bar, .action-buttons, .control-buttons {
+                display: none;
+            }
+            
+            .section-card {
+                page-break-inside: avoid;
+                border: 1px solid #ddd;
+            }
+            
+            .reflection-card {
+                page-break-before: always;
+                border: 2px solid #333;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 우리 반 디지털 탐험일기</h1>
+            <div class="subtitle">오늘 하루를 돌아보며 나만의 이야기 쓰기</div>
+            <div style="margin-top: 15px;">
+                <button onclick="resetForm()" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 600;">
+                    🔄 다시 작성하기
+                </button>
+                <button onclick="loadPrevious()" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; margin-left: 10px;">
+                    📂 이전 기록 불러오기
+                </button>
+                <button onclick="showHistory()" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; margin-left: 10px;">
+                    📚 기록 모아보기
+                </button>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- 진행도 표시 -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%">0%</div>
+            </div>
+            
+            <!-- 1단계: 이름 -->
+            <div class="name-section">
+                <h3 style="color: #5D5FEF; margin-bottom: 10px;">📛 나는 누구?</h3>
+                <input type="text" 
+                       id="studentName" 
+                       class="name-input" 
+                       placeholder="이름 또는 별명"
+                       onchange="updateProgress()">
+                <p style="color: #999; font-size: 0.9em; margin-top: 10px;">
+                    1차시: 나의 디지털 습관 알아보기
+                </p>
+            </div>
+            
+            <!-- 2단계: 오늘 사용한 것들 (다중선택) -->
+            <div class="section-card">
+                <h2 class="section-title">🎯 오늘 사용한 디지털 기기나 앱 (여러 개 선택 가능)</h2>
+                
+                <div class="activity-grid">
+                    <div class="activity-item" onclick="toggleActivity(this, 'smartphone')">
+                        <input type="checkbox" id="check-smartphone">
+                        <label for="check-smartphone">📱 스마트폰</label>
+                    </div>
+                    <div class="activity-item" onclick="toggleActivity(this, 'youtube')">
+                        <input type="checkbox" id="check-youtube">
+                        <label for="check-youtube">📺 유튜브</label>
+                    </div>
+                    <div class="activity-item" onclick="toggleActivity(this, 'game')">
+                        <input type="checkbox" id="check-game">
+                        <label for="check-game">🎮 게임</label>
+                    </div>
+                    <div class="activity-item" onclick="toggleActivity(this, 'sns')">
+                        <input type="checkbox" id="check-sns">
+                        <label for="check-sns">💬 SNS/채팅</label>
+                    </div>
+                    <div class="activity-item" onclick="toggleActivity(this, 'study')">
+                        <input type="checkbox" id="check-study">
+                        <label for="check-study">📚 학습앱</label>
+                    </div>
+                    <div class="activity-item" onclick="toggleActivity(this, 'tv')">
+                        <input type="checkbox" id="check-tv">
+                        <label for="check-tv">📺 TV</label>
+                    </div>
+                    <div class="activity-item" onclick="toggleActivity(this, 'tablet')">
+                        <input type="checkbox" id="check-tablet">
+                        <label for="check-tablet">📱 태블릿</label>
+                    </div>
+                    <div class="activity-item" onclick="toggleActivity(this, 'computer')">
+                        <input type="checkbox" id="check-computer">
+                        <label for="check-computer">💻 컴퓨터</label>
+                    </div>
+                </div>
+                
+                <div class="hint-bubble">
+                    💡 오늘 사용한 것을 모두 체크해보세요! 정직하게 체크하면 더 좋은 성찰이 돼요.
+                </div>
+            </div>
+            
+            <!-- 3단계: 사용 시간 -->
+            <div class="section-card">
+                <h2 class="section-title">⏰ 오늘 디지털 기기를 얼마나 사용했나요?</h2>
+                
+                <div class="time-tracker">
+                    <div class="time-display" id="timeDisplay">2시간</div>
+                    <input type="range" 
+                           class="time-input" 
+                           id="timeSlider" 
+                           min="0" 
+                           max="480" 
+                           value="120" 
+                           step="30"
+                           oninput="updateTime(this.value)">
+                    <div style="display: flex; justify-content: space-between; color: #999; font-size: 0.9em;">
+                        <span>0시간</span>
+                        <span>4시간</span>
+                        <span>8시간</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 4단계: 감정 선택 -->
+            <div class="section-card">
+                <h2 class="section-title">😊 디지털 기기를 사용하면서 어떤 기분이었나요?</h2>
+                
+                <div class="emotion-selector">
+                    <button class="emotion-btn" onclick="selectEmotion(this, 'happy')" title="즐거웠어요">😄</button>
+                    <button class="emotion-btn" onclick="selectEmotion(this, 'excited')" title="신났어요">🤗</button>
+                    <button class="emotion-btn" onclick="selectEmotion(this, 'normal')" title="그저 그랬어요">😐</button>
+                    <button class="emotion-btn" onclick="selectEmotion(this, 'tired')" title="피곤했어요">😴</button>
+                    <button class="emotion-btn" onclick="selectEmotion(this, 'regret')" title="후회돼요">😔</button>
+                    <button class="emotion-btn" onclick="selectEmotion(this, 'angry')" title="짜증났어요">😤</button>
+                </div>
+                
+                <div class="text-area-wrapper">
+                    <label class="text-area-label">왜 그런 기분이었는지 적어보세요:</label>
+                    <textarea class="text-area" 
+                              id="emotionReason" 
+                              placeholder="예: 친구들과 같이 게임해서 즐거웠어요 / 너무 오래해서 눈이 아팠어요..."
+                              onchange="updateProgress()"></textarea>
+                </div>
+            </div>
+            
+            <!-- 5단계: 가장 기억에 남는 것 (서술형) -->
+            <div class="section-card">
+                <h2 class="section-title">✨ 오늘 디지털 기기로 한 것 중 가장 기억에 남는 것</h2>
+                
+                <div class="text-area-wrapper">
+                    <textarea class="text-area" 
+                              id="memorable" 
+                              placeholder="무엇을 했는지, 왜 기억에 남는지 자유롭게 적어보세요..."
+                              onchange="updateProgress()"></textarea>
+                    
+                    <div class="writing-helper">
+                        <button class="helper-btn" onclick="addHelper('memorable', '친구와 ')">친구와</button>
+                        <button class="helper-btn" onclick="addHelper('memorable', '새로운 ')">새로운</button>
+                        <button class="helper-btn" onclick="addHelper('memorable', '처음으로 ')">처음으로</button>
+                        <button class="helper-btn" onclick="addHelper('memorable', '재미있는 ')">재미있는</button>
+                        <button class="helper-btn" onclick="addHelper('memorable', '도움이 된 ')">도움이 된</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 6단계: 좋았던 점과 아쉬운 점 -->
+            <div class="section-card">
+                <h2 class="section-title">💭 오늘의 디지털 생활 돌아보기</h2>
+                
+                <div class="text-area-wrapper">
+                    <label class="text-area-label">👍 잘한 점이나 좋았던 점:</label>
+                    <textarea class="text-area" 
+                              id="goodPoints" 
+                              placeholder="예: 숙제를 먼저 하고 게임을 했어요 / 동생과 함께 봤어요..."
+                              onchange="updateProgress()"></textarea>
+                </div>
+                
+                <div class="text-area-wrapper">
+                    <label class="text-area-label">🤔 아쉬운 점이나 고치고 싶은 점:</label>
+                    <textarea class="text-area" 
+                              id="improvePoints" 
+                              placeholder="예: 약속한 시간보다 더 오래 했어요 / 밖에서 놀 시간이 없었어요..."
+                              onchange="updateProgress()"></textarea>
+                </div>
+            </div>
+            
+            <!-- 7단계: 내일의 계획 -->
+            <div class="section-card">
+                <h2 class="section-title">🎯 내일은 어떻게 하고 싶나요?</h2>
+                
+                <div class="text-area-wrapper">
+                    <label class="text-area-label">내일의 나와 약속:</label>
+                    <textarea class="text-area" 
+                              id="tomorrowPlan" 
+                              placeholder="예: 내일은 1시간만 사용하기 / 책 읽는 시간 만들기 / 친구와 밖에서 놀기..."
+                              onchange="updateProgress()"></textarea>
+                    
+                    <div class="writing-helper">
+                        <button class="helper-btn" onclick="addHelper('tomorrowPlan', '시간을 정해서 ')">시간 정하기</button>
+                        <button class="helper-btn" onclick="addHelper('tomorrowPlan', '다른 활동도 ')">다른 활동</button>
+                        <button class="helper-btn" onclick="addHelper('tomorrowPlan', '가족과 함께 ')">가족과</button>
+                        <button class="helper-btn" onclick="addHelper('tomorrowPlan', '밖에서 ')">밖에서</button>
+                        <button class="helper-btn" onclick="addHelper('tomorrowPlan', '책을 ')">책 읽기</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 8단계: 친구와 공유 (선택) -->
+            <div class="share-section">
+                <h2 style="color: #ff6b6b; margin-bottom: 15px;">🤝 친구들과 생각 나누기 (선택)</h2>
+                
+                <div class="text-area-wrapper">
+                    <label class="text-area-label">친구들에게 하고 싶은 말:</label>
+                    <textarea class="text-area" 
+                              id="shareMessage" 
+                              placeholder="예: 같이 시간을 정해서 사용해요! / 재미있는 앱을 소개해요..."
+                              style="min-height: 60px;"></textarea>
+                </div>
+                
+                <div class="friend-comments">
+                    <h3 style="color: #666; font-size: 0.95em; margin: 15px 0;">📬 친구들의 생각:</h3>
+                    <div id="commentsContainer">
+                        <!-- 친구 코멘트가 여기 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 나의 성찰 카드 -->
+            <div class="reflection-card">
+                <h2 class="reflection-title">📋 오늘의 디지털 탐험 일기</h2>
+                
+                <div class="reflection-content">
+                    <div class="reflection-item">
+                        <div class="reflection-label">탐험가 이름</div>
+                        <div class="reflection-text" id="refName">-</div>
+                    </div>
+                    
+                    <div class="reflection-item">
+                        <div class="reflection-label">오늘 사용한 것들</div>
+                        <div class="reflection-text" id="refActivities">-</div>
+                    </div>
+                    
+                    <div class="reflection-item">
+                        <div class="reflection-label">사용 시간</div>
+                        <div class="reflection-text" id="refTime">-</div>
+                    </div>
+                    
+                    <div class="reflection-item">
+                        <div class="reflection-label">오늘의 기분</div>
+                        <div class="reflection-text" id="refEmotion">-</div>
+                    </div>
+                    
+                    <div class="reflection-item">
+                        <div class="reflection-label">가장 기억에 남는 것</div>
+                        <div class="reflection-text" id="refMemorable">-</div>
+                    </div>
+                    
+                    <div class="reflection-item">
+                        <div class="reflection-label">잘한 점</div>
+                        <div class="reflection-text" id="refGood">-</div>
+                    </div>
+                    
+                    <div class="reflection-item">
+                        <div class="reflection-label">내일의 약속</div>
+                        <div class="reflection-text" id="refTomorrow">-</div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="secondary-btn" onclick="saveReflection()">💾 브라우저에 저장</button>
+                    <button class="primary-btn" onclick="printReflection()">🖨️ 인쇄하기</button>
+                    <button class="secondary-btn" onclick="resetForm()">🔄 다시 작성하기</button>
+                </div>
+            </div>
+            
+            <!-- 이미지 저장 옵션 -->
+            <div class="section-card" style="background: linear-gradient(135deg, #fff8f0, #fff); border-color: #ffe8d0;">
+                <h2 class="section-title" style="color: #ff6b6b;">
+                    <span>📸</span>
+                    <span>탐험일지 이미지로 저장하기</span>
+                </h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                    <!-- 교사용 -->
+                    <div style="background: #f0f8ff; padding: 20px; border-radius: 15px; border: 2px solid #4a90e2;">
+                        <h3 style="color: #4a90e2; margin-bottom: 10px;">👩‍🏫 교사용 (전체 학습지)</h3>
+                        <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
+                            학생이 작성한 모든 내용을 상세히 확인할 수 있는 전체 화면 이미지
+                        </p>
+                        <button class="primary-btn" onclick="downloadTeacherVersion()" style="background: #4a90e2; width: 100%;">
+                            📊 전체 학습지 다운로드
+                        </button>
+                    </div>
+                    
+                    <!-- 학생용 -->
+                    <div style="background: #fff0f5; padding: 20px; border-radius: 15px; border: 2px solid #ff69b4;">
+                        <h3 style="color: #ff69b4; margin-bottom: 10px;">🎒 학생용 (성찰 카드)</h3>
+                        <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
+                            오늘의 디지털 생활을 정리한 예쁜 카드 (친구들과 공유 가능)
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                            <button class="secondary-btn" onclick="downloadStudentCard('simple')" style="background: #ff69b4; color: white;">
+                                💳 심플 카드
+                            </button>
+                            <button class="secondary-btn" onclick="downloadStudentCard('colorful')" style="background: #ff69b4; color: white;">
+                                🎨 컬러풀 카드
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 추가 옵션 -->
+                    <div style="background: #f0fff4; padding: 15px; border-radius: 15px; border: 2px solid #4CAF50;">
+                        <button class="secondary-btn" onclick="downloadCertificate()" style="width: 100%; background: #4CAF50; color: white;">
+                            🏆 수료증 받기 (진행률 80% 이상)
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hint-bubble" style="margin-top: 15px;">
+                    💡 이미지로 저장한 후 클래스팅, 구글 클래스룸, 카카오톡으로 제출하세요!
+                </div>
+            </div>
+            
+            <!-- 완료 버튼 -->
+            <div class="action-buttons">
+                <button class="primary-btn" onclick="completeReflection()" style="padding: 15px 40px; font-size: 1.1em;">
+                    ✨ 오늘의 탐험일기 완성!
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 전역 변수
+        let selectedActivities = new Set();
+        let selectedEmotion = '';
+        let currentProgress = 0;
+        
+        // 활동 토글
+        function toggleActivity(element, type) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                element.classList.add('checked');
+                selectedActivities.add(type);
+            } else {
+                element.classList.remove('checked');
+                selectedActivities.delete(type);
+            }
+            
+            updateProgress();
+            updateReflectionCard();
+        }
+        
+        // 시간 업데이트
+        function updateTime(value) {
+            const hours = Math.floor(value / 60);
+            const minutes = value % 60;
+            let display = '';
+            
+            if (hours > 0) {
+                display = hours + '시간';
+                if (minutes > 0) display += ' ' + minutes + '분';
+            } else {
+                display = minutes + '분';
+            }
+            
+            document.getElementById('timeDisplay').textContent = display;
+            
+            // 시간에 따른 색상 변경
+            const timeDisplay = document.getElementById('timeDisplay');
+            if (value <= 120) {
+                timeDisplay.style.color = '#4ECDC4';
+            } else if (value <= 240) {
+                timeDisplay.style.color = '#ffa500';
+            } else {
+                timeDisplay.style.color = '#ff6b6b';
+            }
+            
+            updateProgress();
+            updateReflectionCard();
+        }
+        
+        // 감정 선택
+        function selectEmotion(btn, emotion) {
+            document.querySelectorAll('.emotion-btn').forEach(b => {
+                b.classList.remove('selected');
+            });
+            btn.classList.add('selected');
+            selectedEmotion = emotion;
+            updateProgress();
+            updateReflectionCard();
+        }
+        
+        // 도우미 텍스트 추가
+        function addHelper(textareaId, text) {
+            const textarea = document.getElementById(textareaId);
+            textarea.value += text;
+            textarea.focus();
+        }
+        
+        // 진행도 업데이트
+        function updateProgress() {
+            let completed = 0;
+            const total = 8;
+            
+            if (document.getElementById('studentName').value) completed++;
+            if (selectedActivities.size > 0) completed++;
+            if (document.getElementById('timeSlider').value) completed++;
+            if (selectedEmotion) completed++;
+            if (document.getElementById('emotionReason').value) completed++;
+            if (document.getElementById('memorable').value) completed++;
+            if (document.getElementById('goodPoints').value || document.getElementById('improvePoints').value) completed++;
+            if (document.getElementById('tomorrowPlan').value) completed++;
+            
+            currentProgress = Math.round((completed / total) * 100);
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = currentProgress + '%';
+            progressBar.textContent = currentProgress + '%';
+            
+            updateReflectionCard();
+        }
+        
+        // 성찰 카드 업데이트
+        function updateReflectionCard() {
+            const name = document.getElementById('studentName').value || '탐험가';
+            const activities = Array.from(selectedActivities).map(a => {
+                const icons = {
+                    'smartphone': '📱 스마트폰',
+                    'youtube': '📺 유튜브',
+                    'game': '🎮 게임',
+                    'sns': '💬 SNS',
+                    'study': '📚 학습앱',
+                    'tv': '📺 TV',
+                    'tablet': '📱 태블릿',
+                    'computer': '💻 컴퓨터'
+                };
+                return icons[a] || a;
+            }).join(', ') || '아직 선택 안 함';
+            
+            const time = document.getElementById('timeDisplay').textContent;
+            
+            const emotionTexts = {
+                'happy': '😄 즐거웠어요',
+                'excited': '🤗 신났어요',
+                'normal': '😐 그저 그랬어요',
+                'tired': '😴 피곤했어요',
+                'regret': '😔 후회돼요',
+                'angry': '😤 짜증났어요'
+            };
+            const emotionReason = document.getElementById('emotionReason').value;
+            const emotion = selectedEmotion ? 
+                (emotionTexts[selectedEmotion] + (emotionReason ? ': ' + emotionReason : '')) : 
+                '아직 선택 안 함';
+            
+            const memorable = document.getElementById('memorable').value || '아직 작성 안 함';
+            const good = document.getElementById('goodPoints').value || '아직 작성 안 함';
+            const tomorrow = document.getElementById('tomorrowPlan').value || '아직 작성 안 함';
+            
+            document.getElementById('refName').textContent = name;
+            document.getElementById('refActivities').textContent = activities;
+            document.getElementById('refTime').textContent = time;
+            document.getElementById('refEmotion').textContent = emotion;
+            document.getElementById('refMemorable').textContent = memorable;
+            document.getElementById('refGood').textContent = good;
+            document.getElementById('refTomorrow').textContent = tomorrow;
+        }
+        
+        // 저장하기
+        function saveReflection() {
+            const data = {
+                name: document.getElementById('studentName').value,
+                activities: Array.from(selectedActivities),
+                time: document.getElementById('timeSlider').value,
+                emotion: selectedEmotion,
+                emotionReason: document.getElementById('emotionReason').value,
+                memorable: document.getElementById('memorable').value,
+                goodPoints: document.getElementById('goodPoints').value,
+                improvePoints: document.getElementById('improvePoints').value,
+                tomorrowPlan: document.getElementById('tomorrowPlan').value,
+                shareMessage: document.getElementById('shareMessage').value,
+                date: new Date().toLocaleDateString('ko-KR'),
+                progress: currentProgress
+            };
+            
+            // 로컬 저장소에 저장
+            const history = JSON.parse(localStorage.getItem('reflectionHistory') || '[]');
+            history.push(data);
+            localStorage.setItem('reflectionHistory', JSON.stringify(history));
+            localStorage.setItem('lastReflection', JSON.stringify(data));
+            
+            alert('✅ 브라우저에 저장되었습니다!\n이 브라우저에서는 나중에 다시 볼 수 있어요.\n(다른 기기나 브라우저에서는 볼 수 없습니다)');
+        }
+        
+        // 인쇄하기 (downloadAsImage 함수는 제거)
+        function printReflection() {
+            updateReflectionCard();
+            window.print();
+        }
+        
+        // 다시 작성하기
+        function resetForm() {
+            if (!confirm('정말 다시 작성하시겠습니까?\n작성한 내용이 모두 사라집니다.')) {
+                return;
+            }
+            
+            // 폼 초기화
+            document.getElementById('studentName').value = '';
+            document.getElementById('timeSlider').value = 120;
+            document.getElementById('emotionReason').value = '';
+            document.getElementById('memorable').value = '';
+            document.getElementById('goodPoints').value = '';
+            document.getElementById('improvePoints').value = '';
+            document.getElementById('tomorrowPlan').value = '';
+            document.getElementById('shareMessage').value = '';
+            
+            // 활동 체크 초기화
+            selectedActivities.clear();
+            document.querySelectorAll('.activity-item').forEach(item => {
+                item.classList.remove('checked');
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                if (checkbox) checkbox.checked = false;
+            });
+            
+            // 감정 초기화
+            selectedEmotion = '';
+            document.querySelectorAll('.emotion-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // 시간 디스플레이 초기화
+            updateTime(120);
+            
+            // 진행률 초기화
+            currentProgress = 0;
+            updateProgress();
+            
+            // 스크롤 최상단으로
+            window.scrollTo(0, 0);
+            
+            alert('✨ 새로운 탐험일지를 작성해보세요!');
+        }
+        
+        // 교사용: 전체 학습지 이미지 다운로드
+        function downloadTeacherVersion() {
+            updateReflectionCard();
+            
+            // 로딩 표시
+            const originalBtn = event.target;
+            const originalText = originalBtn.innerHTML;
+            originalBtn.innerHTML = '⏳ 생성중...';
+            originalBtn.disabled = true;
+            
+            // 임시 컨테이너 생성
+            const tempContainer = document.createElement('div');
+            tempContainer.style.position = 'fixed';
+            tempContainer.style.left = '-9999px';
+            tempContainer.style.width = '1000px';
+            tempContainer.style.background = 'white';
+            tempContainer.style.padding = '40px';
+            tempContainer.style.fontFamily = 'Noto Sans KR, sans-serif';
+            document.body.appendChild(tempContainer);
+            
+            const studentName = document.getElementById('studentName').value || '미입력';
+            const date = new Date().toLocaleDateString('ko-KR');
+            const timeValue = document.getElementById('timeSlider').value;
+            const hours = Math.floor(timeValue / 60);
+            const minutes = timeValue % 60;
+            const timeText = hours > 0 ? `${hours}시간 ${minutes}분` : `${minutes}분`;
+            
+            // 활동 목록 생성
+            const activities = Array.from(selectedActivities).map(a => {
+                const icons = {
+                    'smartphone': '📱 스마트폰',
+                    'youtube': '📺 유튜브',
+                    'game': '🎮 게임',
+                    'sns': '💬 SNS/채팅',
+                    'study': '📚 학습앱',
+                    'tv': '📺 TV',
+                    'tablet': '📱 태블릿',
+                    'computer': '💻 컴퓨터'
+                };
+                return icons[a] || a;
+            }).join(', ') || '선택 없음';
+            
+            // 감정 텍스트
+            const emotionTexts = {
+                'happy': '😄 즐거웠어요',
+                'excited': '🤗 신났어요',
+                'normal': '😐 그저 그랬어요',
+                'tired': '😴 피곤했어요',
+                'regret': '😔 후회돼요',
+                'angry': '😤 짜증났어요'
+            };
+            
+            // 전체 학습지 HTML 생성
+            tempContainer.innerHTML = `
+                <div style="border: 3px solid #4a90e2; border-radius: 20px; padding: 30px;">
+                    <!-- 헤더 -->
+                    <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e8ecff;">
+                        <h1 style="color: #4a90e2; font-size: 2em; margin-bottom: 10px;">📊 디지털 탐험일지 - 교사 확인용</h1>
+                        <div style="color: #666; font-size: 1.1em;">
+                            <span style="font-weight: bold;">학생: ${studentName}</span> | 
+                            <span>작성일: ${date}</span> | 
+                            <span>진행률: ${currentProgress}%</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 1. 기본 정보 -->
+                    <div style="background: #f8f9ff; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="color: #5D5FEF; margin-bottom: 15px;">📌 기본 정보</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div><strong>학생 이름:</strong> ${studentName}</div>
+                            <div><strong>사용 시간:</strong> ${timeText}</div>
+                            <div style="grid-column: 1 / -1;"><strong>사용한 기기/앱:</strong> ${activities}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 2. 감정 및 이유 -->
+                    <div style="background: #fff8f0; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="color: #ff6b6b; margin-bottom: 15px;">😊 감정 기록</h3>
+                        <div><strong>오늘의 기분:</strong> ${emotionTexts[selectedEmotion] || '미선택'}</div>
+                        <div style="margin-top: 10px;">
+                            <strong>이유:</strong>
+                            <div style="background: white; padding: 10px; border-radius: 8px; margin-top: 5px; min-height: 40px;">
+                                ${document.getElementById('emotionReason').value || '작성하지 않음'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 3. 서술형 응답들 -->
+                    <div style="background: #f0fff4; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                        <h3 style="color: #4CAF50; margin-bottom: 15px;">✍️ 상세 기록</h3>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <strong>📌 가장 기억에 남는 것:</strong>
+                            <div style="background: white; padding: 10px; border-radius: 8px; margin-top: 5px; min-height: 40px;">
+                                ${document.getElementById('memorable').value || '작성하지 않음'}
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <strong>👍 잘한 점:</strong>
+                            <div style="background: white; padding: 10px; border-radius: 8px; margin-top: 5px; min-height: 40px;">
+                                ${document.getElementById('goodPoints').value || '작성하지 않음'}
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <strong>🤔 아쉬운 점:</strong>
+                            <div style="background: white; padding: 10px; border-radius: 8px; margin-top: 5px; min-height: 40px;">
+                                ${document.getElementById('improvePoints').value || '작성하지 않음'}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <strong>🎯 내일의 계획:</strong>
+                            <div style="background: white; padding: 10px; border-radius: 8px; margin-top: 5px; min-height: 40px;">
+                                ${document.getElementById('tomorrowPlan').value || '작성하지 않음'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 4. 평가 메모 공간 -->
+                    <div style="background: #fffbf0; padding: 20px; border-radius: 12px; border: 2px dashed #ffd93d;">
+                        <h3 style="color: #f39c12; margin-bottom: 10px;">📝 교사 메모란</h3>
+                        <div style="height: 60px; background: white; border: 1px solid #ddd; border-radius: 8px;"></div>
+                    </div>
+                    
+                    <!-- 푸터 -->
+                    <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #e8ecff;">
+                        <small style="color: #999;">
+                            생성 시각: ${new Date().toLocaleString('ko-KR')} | 
+                            디지털 탐험일지 v1.0
+                        </small>
+                    </div>
+                </div>
+            `;
+            
+            // html2canvas로 캡처
+            html2canvas(tempContainer, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                const fileName = `교사용_${studentName}_${new Date().toISOString().split('T')[0]}.png`;
+                link.download = fileName;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                document.body.removeChild(tempContainer);
+                originalBtn.innerHTML = originalText;
+                originalBtn.disabled = false;
+                
+                alert('📊 교사용 전체 학습지가 저장되었습니다!');
+            }).catch(error => {
+                console.error('오류:', error);
+                if (tempContainer.parentNode) {
+                    document.body.removeChild(tempContainer);
+                }
+                originalBtn.innerHTML = originalText;
+                originalBtn.disabled = false;
+            });
+        }
+        
+        // 학생용: 성찰 카드 이미지
+        function downloadStudentCard(style) {
+            updateReflectionCard();
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.style.position = 'fixed';
+            tempDiv.style.left = '-9999px';
+            tempDiv.style.width = '500px';
+            tempDiv.style.padding = '40px';
+            document.body.appendChild(tempDiv);
+            
+            const studentName = document.getElementById('studentName').value || '탐험가';
+            const date = new Date().toLocaleDateString('ko-KR');
+            const timeValue = document.getElementById('timeSlider').value;
+            const hours = Math.floor(timeValue / 60);
+            const minutes = timeValue % 60;
+            const timeText = hours > 0 ? `${hours}시간 ${minutes}분` : `${minutes}분`;
+            
+            if (style === 'simple') {
+                // 심플 카드
+                tempDiv.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                tempDiv.innerHTML = `
+                    <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                        <h2 style="text-align: center; color: #667eea; margin-bottom: 20px; font-size: 1.5em;">
+                            💳 나의 디지털 하루
+                        </h2>
+                        <div style="text-align: center; color: #999; margin-bottom: 20px;">
+                            ${studentName} | ${date}
+                        </div>
+                        
+                        <div style="background: #f8f9ff; padding: 15px; border-radius: 12px; margin: 15px 0;">
+                            <div style="color: #667eea; font-weight: bold;">⏱ 사용 시간</div>
+                            <div style="font-size: 1.2em; margin-top: 5px;">${timeText}</div>
+                        </div>
+                        
+                        <div style="background: #fff8f0; padding: 15px; border-radius: 12px; margin: 15px 0;">
+                            <div style="color: #ff6b6b; font-weight: bold;">✨ 오늘의 발견</div>
+                            <div style="margin-top: 5px;">${document.getElementById('memorable').value || '멋진 하루였어요!'}</div>
+                        </div>
+                        
+                        <div style="background: #f0fff4; padding: 15px; border-radius: 12px; margin: 15px 0;">
+                            <div style="color: #4CAF50; font-weight: bold;">🎯 내일의 목표</div>
+                            <div style="margin-top: 5px;">${document.getElementById('tomorrowPlan').value || '더 나은 내일을 만들어요!'}</div>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 20px; padding-top: 15px; border-top: 2px solid #e8ecff;">
+                            <div style="font-size: 1.5em;">💪</div>
+                            <div style="color: #667eea; font-weight: bold;">오늘도 잘했어요!</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // 컬러풀 카드
+                tempDiv.style.background = 'linear-gradient(135deg, #FF6B6B, #4ECDC4)';
+                tempDiv.innerHTML = `
+                    <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 3em;">🌈</div>
+                            <h2 style="color: transparent; background: linear-gradient(135deg, #FF6B6B, #4ECDC4); -webkit-background-clip: text; background-clip: text; font-size: 1.8em;">
+                                디지털 탐험 완료!
+                            </h2>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #fff0f5, #f0fffe); padding: 20px; border-radius: 15px;">
+                            <div style="text-align: center; color: #666; margin-bottom: 15px;">
+                                <strong>${studentName}</strong>의 ${date}
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-around; text-align: center;">
+                                <div>
+                                    <div style="font-size: 2em;">⏰</div>
+                                    <div style="color: #FF6B6B; font-weight: bold;">${timeText}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2em;">${document.querySelectorAll('.emotion-btn.selected')[0]?.textContent || '😊'}</div>
+                                    <div style="color: #4ECDC4; font-weight: bold;">오늘의 기분</div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 10px;">
+                                <div style="color: #FF6B6B; font-weight: bold; margin-bottom: 10px;">💭 오늘의 한마디</div>
+                                <div style="font-style: italic; color: #666;">
+                                    "${document.getElementById('memorable').value || '오늘도 열심히 탐험했어요!'}"
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 15px; text-align: center;">
+                                <span style="display: inline-block; background: linear-gradient(135deg, #FF6B6B, #4ECDC4); color: white; padding: 8px 20px; border-radius: 20px; font-weight: bold;">
+                                    진행률 ${currentProgress}% 달성! 🎉
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            html2canvas(tempDiv, {
+                scale: 2,
+                backgroundColor: null,
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                const styleText = style === 'simple' ? '심플' : '컬러풀';
+                const fileName = `학생용_${styleText}_${studentName}_${new Date().toISOString().split('T')[0]}.png`;
+                link.download = fileName;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                document.body.removeChild(tempDiv);
+                alert(`🎨 ${styleText} 카드가 저장되었습니다!\n친구들과 공유해보세요!`);
+            });
+        }
+        
+        // 간단 카드 (기존 함수 제거)
+        function downloadSimpleCard() {
+            downloadStudentCard('simple');
+        }
+        
+        // 수료증 스타일 이미지 저장
+        function downloadCertificate() {
+            if (currentProgress < 80) {
+                alert('진행률이 80% 이상이어야 수료증을 받을 수 있어요! 😊');
+                return;
+            }
+            
+            // 임시 div 생성
+            const tempDiv = document.createElement('div');
+            tempDiv.style.position = 'fixed';
+            tempDiv.style.left = '-9999px';
+            tempDiv.style.width = '800px';
+            tempDiv.style.height = '600px';
+            tempDiv.style.padding = '40px';
+            tempDiv.style.background = 'linear-gradient(135deg, #FFD700, #FFA500)';
+            tempDiv.style.display = 'flex';
+            tempDiv.style.alignItems = 'center';
+            tempDiv.style.justifyContent = 'center';
+            document.body.appendChild(tempDiv);
+            
+            const studentName = document.getElementById('studentName').value || '탐험가';
+            const timeValue = document.getElementById('timeSlider').value;
+            const hours = Math.floor(timeValue / 60);
+            const minutes = timeValue % 60;
+            const timeText = hours > 0 ? `${hours}시간 ${minutes}분` : `${minutes}분`;
+            
+            // 수료증 내용 생성
+            tempDiv.innerHTML = `
+                <div style="background: white; border-radius: 20px; padding: 50px; width: 100%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                    <div style="font-size: 3em; margin-bottom: 20px;">🏆</div>
+                    <h1 style="color: #FFD700; font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">
+                        디지털 탐험 수료증
+                    </h1>
+                    <div style="color: #666; font-size: 1.2em; margin-bottom: 30px;">Certificate of Digital Exploration</div>
+                    
+                    <div style="border-top: 2px solid #FFD700; border-bottom: 2px solid #FFD700; padding: 20px 0; margin: 30px 0;">
+                        <h2 style="color: #333; font-size: 2em; margin-bottom: 10px;">${studentName}</h2>
+                        <p style="color: #666; font-size: 1.1em;">위 탐험가는 오늘 하루 동안</p>
+                        <p style="color: #FF6B6B; font-size: 1.3em; font-weight: bold; margin: 10px 0;">${timeText} 동안 디지털 기기를 사용하며</p>
+                        <p style="color: #666; font-size: 1.1em;">자신의 디지털 생활을 성실히 기록하고 성찰하였습니다.</p>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <p style="color: #4ECDC4; font-size: 1.2em; font-weight: bold;">진행률: ${currentProgress}%</p>
+                        <p style="color: #999; font-size: 1em; margin-top: 10px;">${new Date().toLocaleDateString('ko-KR')}</p>
+                    </div>
+                    
+                    <div style="margin-top: 30px; display: flex; justify-content: space-around;">
+                        <div>
+                            <div style="font-size: 1.5em;">✨</div>
+                            <div style="color: #666; font-size: 0.9em;">성실함</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.5em;">💭</div>
+                            <div style="color: #666; font-size: 0.9em;">성찰</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.5em;">🎯</div>
+                            <div style="color: #666; font-size: 0.9em;">계획</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            html2canvas(tempDiv, {
+                scale: 2,
+                backgroundColor: null,
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                const date = new Date().toISOString().split('T')[0];
+                link.download = `디지털탐험_수료증_${studentName}_${date}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                document.body.removeChild(tempDiv);
+                
+                alert('🏆 수료증이 저장되었습니다!\n정말 잘했어요!');
+            });
+        }
+        
+        // 이전 기록 불러오기
+        function loadPrevious() {
+            const lastData = localStorage.getItem('lastReflection');
+            if (!lastData) {
+                alert('💭 저장된 기록이 없습니다.');
+                return;
+            }
+            
+            if (!confirm('이전에 작성한 내용을 불러올까요?')) {
+                return;
+            }
+            
+            const data = JSON.parse(lastData);
+            
+            // 데이터 복원
+            document.getElementById('studentName').value = data.name || '';
+            document.getElementById('timeSlider').value = data.time || 120;
+            document.getElementById('emotionReason').value = data.emotionReason || '';
+            document.getElementById('memorable').value = data.memorable || '';
+            document.getElementById('goodPoints').value = data.goodPoints || '';
+            document.getElementById('improvePoints').value = data.improvePoints || '';
+            document.getElementById('tomorrowPlan').value = data.tomorrowPlan || '';
+            document.getElementById('shareMessage').value = data.shareMessage || '';
+            
+            // 활동 복원
+            selectedActivities.clear();
+            data.activities?.forEach(activity => {
+                selectedActivities.add(activity);
+                const item = document.querySelector(`#check-${activity}`);
+                if (item) {
+                    item.checked = true;
+                    item.parentElement.classList.add('checked');
+                }
+            });
+            
+            // 감정 복원
+            if (data.emotion) {
+                selectedEmotion = data.emotion;
+                document.querySelectorAll('.emotion-btn').forEach(btn => {
+                    if (btn.getAttribute('onclick').includes(data.emotion)) {
+                        btn.classList.add('selected');
+                    }
+                });
+            }
+            
+            updateTime(data.time || 120);
+            updateProgress();
+            
+            alert(`✅ ${data.date}에 작성한 내용을 불러왔습니다!`);
+        }
+        
+        // 완료
+        function completeReflection() {
+            if (currentProgress < 80) {
+                alert('아직 작성하지 않은 부분이 있어요! 조금 더 채워주세요. 😊');
+                return;
+            }
+            
+            saveReflection();
+            
+            const message = `
+🎊 오늘의 탐험일기 완성!
+
+진행률: ${currentProgress}%
+${currentProgress === 100 ? '완벽하게 작성했네요! 🌟' : '잘 작성했어요! 👍'}
+
+내일도 함께 탐험해요!
+            `.trim();
+            
+            alert(message);
+            
+            // 친구 코멘트 예시 추가 (실제로는 서버에서 가져옴)
+            addFriendComment('민수', '나도 오늘 게임 많이 했는데 내일은 줄여보려고!');
+            addFriendComment('지영', '같이 밖에서 놀자! 😊');
+        }
+        
+        // 친구 코멘트 추가
+        function addFriendComment(author, text) {
+            const container = document.getElementById('commentsContainer');
+            const comment = document.createElement('div');
+            comment.className = 'comment';
+            comment.innerHTML = `
+                <div class="comment-author">${author}</div>
+                <div class="comment-text">${text}</div>
+            `;
+            container.appendChild(comment);
+        }
+        
+        // 기록 모아보기
+        function showHistory() {
+            const history = JSON.parse(localStorage.getItem('reflectionHistory') || '[]');
+            
+            if (history.length === 0) {
+                alert('📭 아직 저장된 탐험일기가 없어요.');
+                return;
+            }
+            
+            // 모달 생성
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            `;
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: white;
+                border-radius: 20px;
+                padding: 30px;
+                max-width: 600px;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            `;
+            
+            let htmlContent = `
+                <h2 style="color: #5D5FEF; margin-bottom: 20px;">📚 나의 탐험일기 기록</h2>
+                <button onclick="this.parentElement.parentElement.remove()" style="float: right; background: #ff6b6b; color: white; border: none; padding: 5px 15px; border-radius: 15px; cursor: pointer;">✕ 닫기</button>
+                <div style="clear: both; margin-top: 20px;">
+            `;
+            
+            // 최근 기록부터 표시 (역순)
+            history.reverse().slice(0, 10).forEach((record, index) => {
+                const timeValue = record.time || 0;
+                const hours = Math.floor(timeValue / 60);
+                const minutes = timeValue % 60;
+                const timeText = hours > 0 ? `${hours}시간 ${minutes}분` : `${minutes}분`;
+                
+                htmlContent += `
+                    <div style="background: #f8f9ff; border-left: 3px solid #6B73FF; padding: 15px; margin: 15px 0; border-radius: 8px;">
+                        <div style="color: #5D5FEF; font-weight: bold; margin-bottom: 10px;">
+                            📅 ${record.date} | ${record.name || '익명'} | 진행률: ${record.progress || 0}%
+                        </div>
+                        <div style="color: #666; line-height: 1.5;">
+                            ⏱ 사용 시간: ${timeText}<br>
+                            📝 기억에 남는 것: ${record.memorable || '기록 없음'}<br>
+                            🎯 내일의 약속: ${record.tomorrowPlan || '기록 없음'}
+                        </div>
+                        <button onclick="loadHistoryItem(${history.length - 1 - index})" style="margin-top: 10px; background: #6B73FF; color: white; border: none; padding: 5px 15px; border-radius: 10px; cursor: pointer; font-size: 0.9em;">
+                            📂 이 기록 불러오기
+                        </button>
+                    </div>
+                `;
+            });
+            
+            if (history.length > 10) {
+                htmlContent += `<p style="text-align: center; color: #999; margin-top: 20px;">최근 10개의 기록만 표시됩니다.</p>`;
+            }
+            
+            htmlContent += '</div>';
+            modalContent.innerHTML = htmlContent;
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            // 모달 외부 클릭 시 닫기
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            };
+        }
+        
+        // 특정 기록 불러오기
+        function loadHistoryItem(index) {
+            const history = JSON.parse(localStorage.getItem('reflectionHistory') || '[]');
+            const data = history[index];
+            
+            if (!data) {
+                alert('기록을 불러올 수 없습니다.');
+                return;
+            }
+            
+            // 모달 닫기
+            const modal = document.querySelector('div[style*="position: fixed"]');
+            if (modal) modal.remove();
+            
+            // 데이터 복원 (loadPrevious와 동일한 로직)
+            document.getElementById('studentName').value = data.name || '';
+            document.getElementById('timeSlider').value = data.time || 120;
+            document.getElementById('emotionReason').value = data.emotionReason || '';
+            document.getElementById('memorable').value = data.memorable || '';
+            document.getElementById('goodPoints').value = data.goodPoints || '';
+            document.getElementById('improvePoints').value = data.improvePoints || '';
+            document.getElementById('tomorrowPlan').value = data.tomorrowPlan || '';
+            document.getElementById('shareMessage').value = data.shareMessage || '';
+            
+            // 활동 복원
+            selectedActivities.clear();
+            document.querySelectorAll('.activity-item').forEach(item => {
+                item.classList.remove('checked');
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                if (checkbox) checkbox.checked = false;
+            });
+            
+            data.activities?.forEach(activity => {
+                selectedActivities.add(activity);
+                const item = document.querySelector(`#check-${activity}`);
+                if (item) {
+                    item.checked = true;
+                    item.parentElement.classList.add('checked');
+                }
+            });
+            
+            // 감정 복원
+            document.querySelectorAll('.emotion-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            if (data.emotion) {
+                selectedEmotion = data.emotion;
+                document.querySelectorAll('.emotion-btn').forEach(btn => {
+                    if (btn.getAttribute('onclick').includes(data.emotion)) {
+                        btn.classList.add('selected');
+                    }
+                });
+            }
+            
+            updateTime(data.time || 120);
+            updateProgress();
+            
+            alert(`✅ ${data.date}의 기록을 불러왔습니다!`);
+        }
+        
+        // 페이지 로드 시 이전 데이터 확인
+        window.onload = function() {
+            const lastData = localStorage.getItem('lastReflection');
+            if (lastData) {
+                const data = JSON.parse(lastData);
+                const today = new Date().toLocaleDateString('ko-KR');
+                
+                // 오늘 작성한 것이 아니면 물어보기
+                if (data.date !== today) {
+                    setTimeout(() => {
+                        if (confirm(`📝 이전에 작성한 탐험일기가 있어요. (${data.date})\n이어서 작성할까요?`)) {
+                            loadPrevious();
+                        }
+                    }, 500);
+                }
+            }
+        };
+    </script>
+</body>
+</html>
